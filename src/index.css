@@ -153,6 +153,7 @@ body {
 
 .footer {
   font-size: 1.4rem;
+  bottom:0;
 }
 
 .order {
