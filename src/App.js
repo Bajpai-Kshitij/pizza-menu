@@ -1,5 +1,5 @@
 import './App.css';
-// import { pizzaData } from './data';
+import { pizzaData } from './data';
 
 export default function App() {
   // console.log(pizzaData)
@@ -13,28 +13,33 @@ export default function App() {
 }
 
 function Menu(){
+  const pizzas = pizzaData
   return(
     <div className='menu'>
       <h2>Our Menu</h2>
-      <div className='pizzas'>
-        <Pizza name={'Pizza Margherita'} image={"pizzas/margherita.jpg"} 
-          indegreints = {"Tomato and mozarella"} price={10} />
-        <Pizza name={'Focaccia'} image={"pizzas/focaccia.jpg"} 
-          indegreints = {"Bread with italian olive oil and rosemary"} price={6} />
-        <Pizza name={'Pizza Spinaci'} image={"pizzas/spinaci.jpg"} 
-          indegreints = {"Tomato, mozarella, spinach, and ricotta cheese"} price={12} />
+      {pizzas.length >0 ? (
+        <>
+        <p>We Only sell authentic pizzas</p>
+        <div className='pizzas'>
+        {pizzas.map(element => 
+          <Pizza {...element} key={element.name} />
+        )}
       </div>
+        </>
+      ): 
+      <p>We are still working on our menu. Please try after some time</p>}
     </div>
   )
 }
 
-function Pizza(props){
+function Pizza({name,photoName,ingredients,price,soldOut}){
+  
   return (
-  <div className='pizza'>
-    <img src={props.image} alt={props.name}></img>
-    <h3>{props.name}</h3>
-    <p>{props.indegreints}</p>
-    <span>{props.price}</span>
+  <div className={`pizza ${soldOut ? "sold-out":""}`}>
+    <img src={photoName} alt={name}></img>
+    <h3>{name}</h3>
+    <p>{ingredients}</p>
+    <span>{soldOut ? "SOLD OUT" : price}</span>
   </div>
   )
 }
@@ -50,12 +55,22 @@ function Headers() {
 
 function Footers() {
   const hour = new Date().getHours()
-
-  const status = hour >= 8 && hour <= 22 ? "Open":"Closed"
+  const startHour = 6;
+  const closeHour = 22;
+  const status = hour >= startHour && hour <= closeHour ? "Open":"Closed"
   return (
     <footer className='footer'>
-      <p>Restaurant is now <strong>{status}</strong>.</p>
-      <p>{new Date().toString()}</p>
+      {status === "Open"? 
+      (<>
+      <p>Restaurant is now <strong>Open</strong>. We will be accepting orders by {closeHour}:00</p>
+      <br></br>
+      <button className="btn" >Order now</button>
+      </>)
+        :(<>
+        <p>Restaurant is now <strong>Closed</strong>. We will start accepting orders from {startHour}:00</p>
+        <p>{new Date().toString()}</p>
+        </>)
+         }
     </footer>
 
   )
